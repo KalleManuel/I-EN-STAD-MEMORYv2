@@ -6,6 +6,11 @@ TagManager:
   tags:
   - PuzzleButton
   - Players
+  - PlayersChoice
+  - Timer
+  - GameControl
+  - Music
+  - Canvas
   layers:
   - Default
   - TransparentFX

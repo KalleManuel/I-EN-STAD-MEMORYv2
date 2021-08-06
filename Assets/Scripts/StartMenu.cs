@@ -11,25 +11,58 @@ public class StartMenu : MonoBehaviour
 
     public bool mayor;
     public bool pip;
+    public bool both;
     public Button pipButton;
     public Button mayorButton;
-    public Color chosen;
-    public Color disabled;
+
+    public GameObject pipBackground;
+    public GameObject borgisBackground;
+    public Sprite redBack;
+    public Sprite greenBack;
+    public Image borgisImage, pipImage;
+
+    public Animator PipFrameshake;
+    public Animator borgisFrameShake;
 
     public int dificulty;
 
     public Animator anim;
 
-    public Vector3 pos1;
-    public Vector3 pos2;
-    public Vector3 pos3;
-    public GameObject ram;
+    public Quaternion pos1;
+    public Quaternion pos2;
+    public Quaternion pos3;
+    public GameObject arrow;
+
+    public Text difDisplay;
 
     public float speed;
+   
 
-        // Start is called before the first frame update
-        void Start()
+    public JoinedPlayers joinedPlayers;
+
+    public Image onePlayerImage;
+    public Image twoPlayersImage;
+
+    public Color selected;
+    public Color deselected;
+
+    public GameObject infoPrefab;
+
+    // audio
+
+    public AudioSource VoicePlayer;
+
+    public AudioClip[] voiceClip;
+
+    public float timer;
+    public int hint;
+    public int TimeUntilNextHint = 20;
+
+
+    // Start is called before the first frame update
+    void Start()
     {
+        
         //Default playmode
         onePlayerGame = true;
         twoPlayerGame = false;
@@ -41,52 +74,95 @@ public class StartMenu : MonoBehaviour
 
         // default difficulty
         dificulty = 1;
-        speed = 5;
+        speed = 90;
 
-        pos1 = new Vector3(-1.5f, -1.36f, 0);
-        pos2 = new Vector3(0, -1.36f, 0);
-        pos3 = new Vector3(1.5f, -1.36f, 0);
+        pos1 =  Quaternion.Euler(new Vector3(0f, 0f, 65f));
+        pos2 = Quaternion.Euler(new Vector3(0f, 0f, 0));
+        pos3 = Quaternion.Euler(new Vector3(0f, 0f, -65f));
 
+        pipBackground.GetComponent<Image>().sprite = greenBack;
+        borgisBackground.GetComponent<Image>().sprite = redBack;
 
+        timer = TimeUntilNextHint;
+        hint = 7;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float step = speed * Time.deltaTime;
+        float degreesPerSecond = speed * Time.deltaTime;
+
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
+        else
+        {
+            ;
+            VoicePlayer.PlayOneShot(voiceClip[hint]);
+            timer = TimeUntilNextHint;
+
+            if (hint == 7)
+            {
+                hint = 8;
+            }
+
+            else hint = 7;
+        }
 
         if (dificulty == 1)
         { 
-            ram.transform.position = Vector3.MoveTowards(ram.transform.position, pos1, step);
+            arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos1, degreesPerSecond);
+            difDisplay.text = "Lätt";
+            
         }
 
 
         else if (dificulty == 2)
         {
-            ram.transform.position = Vector3.MoveTowards(ram.transform.position, pos2, step);
+            arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos2, degreesPerSecond);
+            difDisplay.text = "Medel";
+            
         }
 
         else if (dificulty == 3)
         {
-            ram.transform.position = Vector3.MoveTowards(ram.transform.position, pos3, step);
+            arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos3, degreesPerSecond);
+            difDisplay.text = "Svår";
+           
         }
 
         if (twoPlayerGame)
         {
-            pipButton.image.color = chosen;
-            mayorButton.image.color = chosen;
+            pipBackground.GetComponent<Image>().sprite = greenBack;
+            borgisBackground.GetComponent<Image>().sprite = greenBack;
+            pipImage.color = selected;
+            borgisImage.color = selected;
+            onePlayerImage.color = deselected;
+            twoPlayersImage.color = selected;
+
+
+
         }
 
        else if (mayor)
         {
-            pipButton.image.color = disabled;
-            mayorButton.image.color = chosen;
+            pipBackground.GetComponent<Image>().sprite = redBack;
+            borgisBackground.GetComponent<Image>().sprite = greenBack;
+            pipImage.color = deselected;
+            borgisImage.color = selected;
+            
+
+
         }
 
         else if (pip)
         {
-            pipButton.image.color = chosen;
-            mayorButton.image.color = disabled;
+            pipBackground.GetComponent<Image>().sprite = greenBack;
+            borgisBackground.GetComponent<Image>().sprite = redBack;
+            pipImage.color = selected;
+            borgisImage.color = deselected;
+            
         }
 
       
@@ -96,11 +172,24 @@ public class StartMenu : MonoBehaviour
 
     public void SelectOnePlayer()
     {
+       
+
         if (twoPlayerGame)
         {
             anim.SetTrigger("GoLeft");
             onePlayerGame = true;
             twoPlayerGame = false;
+            both = false;
+            onePlayerImage.color = selected;
+            twoPlayersImage.color = deselected;
+            pipImage.color = selected;
+            borgisImage.color = deselected;
+            VoicePlayer.PlayOneShot(voiceClip[0], 1);
+
+            joinedPlayers.myPlayerMode = JoinedPlayers.PlayerMode.ONEPLAYER;
+            joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
+            timer = TimeUntilNextHint;
+
         }
         else return;
 
@@ -114,6 +203,14 @@ public class StartMenu : MonoBehaviour
             anim.SetTrigger("GoRight");
             onePlayerGame = false;
             twoPlayerGame = true;
+            both = true;
+            joinedPlayers.myPlayerMode = JoinedPlayers.PlayerMode.TWOPLAYERS;
+
+            joinedPlayers.myHelpers = JoinedPlayers.Helpers.BOTH;
+            PipFrameshake.SetTrigger("PShake");
+            borgisFrameShake.SetTrigger("BShake");
+            VoicePlayer.PlayOneShot(voiceClip[1], 1);
+            timer = TimeUntilNextHint;
         }
         else return;
       
@@ -123,93 +220,82 @@ public class StartMenu : MonoBehaviour
 
     public void SelectMayor()
     {
-        if (pip)
+        if (pip && onePlayerGame)
         {
+            borgisFrameShake.SetTrigger("BShake");
             mayor = true;
             pip = false;
-           
-        } 
-    } 
 
-    public void SelectPip() 
+            joinedPlayers.myHelpers = JoinedPlayers.Helpers.MAYOR;
+            VoicePlayer.PlayOneShot(voiceClip[3], 1);
+            timer = TimeUntilNextHint;
+        }
+
+        else
+        {
+            VoicePlayer.PlayOneShot(voiceClip[10]);
+            timer = TimeUntilNextHint;
+
+        }
+    }
+
+    public void SelectPip()
     {
         if (mayor)
         {
+
+            PipFrameshake.SetTrigger("PShake");
             pip = true;
             mayor = false;
+            joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
+            VoicePlayer.PlayOneShot(voiceClip[2], 1);
+            timer = TimeUntilNextHint;
+        }
+
+        else
+        {
+            VoicePlayer.PlayOneShot(voiceClip[10]);
+            timer = TimeUntilNextHint;
+
         }
     }
 
     public void SelectEasy()
     {
         dificulty = 1;
+        VoicePlayer.PlayOneShot(voiceClip[4], 1);
+        joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.EASY;
+        timer = TimeUntilNextHint;
     }
 
     public void SelectMedium()
     {
         dificulty = 2;
+        VoicePlayer.PlayOneShot(voiceClip[5], 1);
+        joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.MEDIUM;
+        timer = TimeUntilNextHint;
     }
 
     public void SelectHard()
     {
         dificulty = 3;
+        VoicePlayer.PlayOneShot(voiceClip[6], 1);
+        joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.HARD;
+        timer = TimeUntilNextHint;
     }
 
-    //Start Button
-
-    public void StartGame()
+    public void Info()
     {
-        if (onePlayerGame)
-        {
-            if (mayor)
-            {
-                Debug.Log("One player - Mayor");
-            }
-
-            else if (pip)
-            {
-                Debug.Log("One player - Pip");
-            }
-        }
-
-        else if (twoPlayerGame)
-        {
-            Debug.Log("Two player game");
-        }
-
-        if (dificulty == 1)
-        {
-            Debug.Log("Easy");
-        }
-
-        if (dificulty == 2)
-        {
-            Debug.Log("Medium");
-        }
-
-        if (dificulty == 3)
-        {
-            Debug.Log("hard");
-        }
-
-
-
+        GameObject infosquare = Instantiate(infoPrefab, new Vector3(0, 0, 0), Quaternion.identity, GameObject.FindGameObjectWithTag("Canvas").transform);
+        timer = 500;
     }
 
-
-    public void Playeasy()
+    public void Help()
     {
-        SceneManager.LoadScene(1);
+        VoicePlayer.PlayOneShot(voiceClip[9], 1);
+        timer = voiceClip[9].length + TimeUntilNextHint;
     }
 
-    public void Playmedium()
-    {
-        SceneManager.LoadScene(2);
-    }
-
-    public void Playhard()
-    {
-        SceneManager.LoadScene(3);
-    }
+    
 }
 

@@ -8,6 +8,9 @@ using TMPro;
 
 public class GameController : MonoBehaviour {
 
+    // Game controll variables
+
+    [Header("Memory Game Settings")]
     [SerializeField]
     private Sprite bgImage;
 
@@ -27,9 +30,6 @@ public class GameController : MonoBehaviour {
 
     private string firstGuessPuzzle, secondGuessPuzzle;
 
-    public GameObject gameoverplate;
-
-    public int gameLevel;
     public bool firstCard;
     public bool secondCard;
 
@@ -40,38 +40,31 @@ public class GameController : MonoBehaviour {
 
 
 
-    // Players turn & score
+      [Header("Player settings")]
 
-    public GameObject playersInGame;
-    public int thePlayers;
+    public GameObject playersChoices;
 
-    public string firstPlayerName;
-    public string secondPlayerName;
-    public string thirdPlayerName;
-    public string forthPlayerName;
+    public JoinedPlayers myChoice;
 
-    public TextMeshProUGUI Player1Score;
-    public TextMeshProUGUI Player2Score;
-    public TextMeshProUGUI Player3Score;
-    public TextMeshProUGUI Player4Score;
 
-    public GameObject scoreHolder1;
-    public GameObject scoreHolder2;
-    public GameObject scoreHolder3;
-    public GameObject scoreHolder4;
+    [Header("Score Display")]
 
+    public Text Player1Score;
+    public Text Player2Score;
+    
     public int score1 = 0;
     public int score2 = 0;
-    public int score3 = 0;
-    public int score4 = 0;
 
-  
+    public GameObject timerDisplay;
+    public GameObject timer;
+    public GameObject playerTwoDisplay;
 
+
+
+    [Header("Player Turns")]
     public int whosTurn = 1;
 
-    public GameObject scoreholderSolo;
-
-    public TextMeshProUGUI counter;
+   
 
     public int guesses = 0;
 
@@ -80,59 +73,76 @@ public class GameController : MonoBehaviour {
 
     public Color white;
 
-    public GameObject EndScoreHolder;
+    public int activeSize;
+    public int inactiveSize;
+
+    public GameObject pipBackground;
+    public GameObject borgisBackground;
+    public Sprite greenBack;
+    public Sprite redBack;
+
+
+
+    
+
+    [Header("Menu")]
+
+    public GameObject menuPlate;
+
+    [Header("Flip cards")]
 
     public float waitSeconds = 0.0001f;
     public int flipTimer;
     public int rotationSpeed = 5;
+
+    [Header("End and score")]
+
     
+    public GameObject gameoverplate;
+    public Text endMessage;
+    public Text endmessage2;
+    public TMP_Text pepTalk;
 
-
-    // AUDIO
+    [Header("Audio")]
 
     // pips talk
 
-    public AudioSource randompos;
 
-    public AudioSource randomneg;
+    public AudioSource audioSource;
 
-    public AudioClip[] audioClipArray;
+    public AudioClip[] happyMayor;
 
-    public AudioClip[] audioClipArrayneg;
+    public AudioClip[] sadMayor;
 
-    // Scoresound
+    public AudioClip[] happyPip;
 
-    public AudioSource getPoint;
+    public AudioClip [] sadPip;
 
-    // winning game
+    public AudioClip[] positive;
 
-    public AudioSource success;
+    public AudioClip [] negative;
 
-    public AudioSource endTalk;
+    public AudioClip[] SFX; // 1 get point, 2 sucess, 3 card up, 4 card down
 
-    // Music
+    public AudioClip[] teamMayor;
+    public AudioClip[] teamPip;
+
+
+    public AudioClip[] endTalk;
+
+    // Volumecontroll
+
+    public float SfxVolume;
 
     public AudioSource music;
 
+
+
   
-    // Cardflips
-    public AudioSource cardUp;
-
-    public AudioSource CardDown;
-
-    
-    // METHODS
-
-    // at scene awake
-
 
     void Awake()
     {
-        puzzles = Resources.LoadAll<Sprite>("Sprites/Memcards");
-        
-
-        randompos = GetComponent<AudioSource>();
-        randomneg = GetComponent<AudioSource>();
+        puzzles = Resources.LoadAll<Sprite>("Sprites/CARDSV2");
     
 
     
@@ -149,167 +159,120 @@ public class GameController : MonoBehaviour {
         gameoverplate.SetActive(false);
         firstCard = false;
         secondCard = false;
-        
+        menuPlate.SetActive(false);
+        SfxVolume = 0.5f;
 
+        // get and display player choices
 
-        // get player amount
+        pipBackground.GetComponent<Image>().sprite = greenBack;
+        borgisBackground.GetComponent<Image>().sprite = redBack;
 
-        playersInGame = GameObject.FindGameObjectWithTag("Players");
-        thePlayers = playersInGame.GetComponent<JoinedPlayers>().joinedPlayers;
+        playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
+        myChoice = playersChoices.GetComponent<JoinedPlayers>();
 
-        firstPlayerName = playersInGame.GetComponent<JoinedPlayers>().player1Name;
-        secondPlayerName = playersInGame.GetComponent<JoinedPlayers>().player2Name;
-        thirdPlayerName = playersInGame.GetComponent<JoinedPlayers>().player3Name;
-        forthPlayerName = playersInGame.GetComponent<JoinedPlayers>().player4Name;
+        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
+        {
+            playerTwoDisplay.SetActive(false);
+            timerDisplay.SetActive(true);
+            pipBackground.GetComponent<Image>().sprite = greenBack;
+            borgisBackground.GetComponent<Image>().sprite = greenBack;
 
-        gameLevel = playersInGame.GetComponent<JoinedPlayers>().level;
+            if (myChoice.myHelpers == JoinedPlayers.Helpers.MAYOR)
+            {
+                negative = sadMayor;
+                positive = happyMayor;
+            }
 
-    
+            else if (myChoice.myHelpers == JoinedPlayers.Helpers.PIP)
+            {
+                positive = happyPip;
+                negative = sadPip;
+            }
+        }
 
+        else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
+        {
+            playerTwoDisplay.SetActive(true);
+            timerDisplay.SetActive(false);
+            pipBackground.GetComponent<Image>().sprite = greenBack;
+            borgisBackground.GetComponent<Image>().sprite = redBack;
+
+        }
+
+       
 
         // get player scoreboards
 
-        if (thePlayers == 1)
-
-        {
-            scoreholderSolo.SetActive(true);
-
-            scoreHolder1.SetActive(false);
-            scoreHolder2.SetActive(false);
-            scoreHolder3.SetActive(false);
-            scoreHolder4.SetActive(false);
-        }
-
-        else if (thePlayers == 2)
-        {
-            TwoInARow();
-            scoreHolder1.SetActive(true);
-            scoreHolder2.SetActive(true);
-
-            scoreHolder3.SetActive(false);
-            scoreHolder4.SetActive(false);
-            scoreholderSolo.SetActive(false);
+        Player1Score.text = "" + score1;
+        Player2Score.text = "" + score2;
 
 
-        }
-
-        else if (thePlayers == 3)
-        {
-            ThreeInARow();
-            scoreHolder1.SetActive(true);
-            scoreHolder2.SetActive(true);
-            scoreHolder3.SetActive(true);
-
-
-
-            scoreHolder4.SetActive(false);
-            scoreholderSolo.SetActive(false);
-        }
-
-
-
-        else if (thePlayers == 4)
-        {
-            scoreHolder1.SetActive(true);
-            scoreHolder2.SetActive(true);
-            scoreHolder3.SetActive(true);
-            scoreHolder4.SetActive(true);
-
-            scoreholderSolo.SetActive(false);
-        }
-
-        // replace empty names
-
-        if (firstPlayerName == "")
-        {
-            firstPlayerName = "Spelare 1";
-        }
-
-        if (secondPlayerName == "")
-        {
-            secondPlayerName = "Spelare 2";
-        }
-
-        if (thirdPlayerName == "")
-        {
-            thirdPlayerName = "Spelare 3";
-        }
-
-        if (forthPlayerName == "")
-        {
-            forthPlayerName = "Spelare 4";
-        }
+        
     }
 
     private void Update()
     {
 
-       
-
-        // sologame scoretext
-
-        counter.text =  firstPlayerName + ": " + guesses + " försök!";
-
-        // Player 1 scoretext
-
-        Player1Score.text = firstPlayerName + ": " + score1;
-
-        // player 2 scoretext
-
-        Player2Score.text =  secondPlayerName + ": " + score2;
-
-        // player 3 scoretext
-
-        Player3Score.text = thirdPlayerName + ": " + score3;
-
-        // player 4 scoretext
-
-        Player4Score.text = forthPlayerName+ ": " + score4;
 
         //Player Indicator
-
-        if (whosTurn == 1)
+        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
-         
-            Player1Score.color = activeColor;
-
-            Player2Score.color = white;
-            Player3Score.color = white;
-            Player4Score.color = white;
+            Player1Score.text = "" + guesses;
 
         }
 
-
-        else if (whosTurn == 2)
+        else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
         {
+            Player1Score.text = "" + score1;
+            Player2Score.text = "" + score2;
 
-            Player1Score.color = white;
+            if (whosTurn == 1)
+            {
+                pipBackground.GetComponent<Image>().sprite = greenBack;
+                borgisBackground.GetComponent<Image>().sprite = redBack;
 
-            Player2Score.color = activeColor;
-            Player3Score.color = white;
-            Player4Score.color = white;
-        }
+                Player1Score.color = activeColor;
+                Player2Score.color = white;
+                if (Player1Score.fontSize < 65)
+                {
+                    Player1Score.fontSize++;
+                }
 
-        else if (whosTurn == 3)
-        {
+                if (Player2Score.fontSize > 35)
+                {
+                    Player2Score.fontSize--;
+                }
 
-            Player1Score.color = white;
+                negative = sadPip;
+                positive = happyPip;
 
-            Player2Score.color = white;
-            Player3Score.color = activeColor;
-            Player4Score.color = white;
 
-            Player4Score.fontStyle = FontStyles.Normal;
-        }
+            }
 
-        else if (whosTurn == 4)
-        {
 
-            Player1Score.color = white;
+            else if (whosTurn == 2)
+            {
+                pipBackground.GetComponent<Image>().sprite = redBack;
+                borgisBackground.GetComponent<Image>().sprite = greenBack;
 
-            Player2Score.color = white;
-            Player3Score.color = white;
-            Player4Score.color = activeColor;
+                Player1Score.color = white;
+                Player2Score.color = activeColor;
+
+                if (Player1Score.fontSize > 35)
+                {
+                    Player1Score.fontSize--;
+                }
+
+                if (Player2Score.fontSize < 60)
+                {
+                    Player2Score.fontSize++;
+                }
+
+                negative = sadMayor;
+                positive = happyMayor;
+
+            }
+
         }
 
     }
@@ -360,12 +323,13 @@ public class GameController : MonoBehaviour {
         if (!firstGuess)
         {
             
-            cardUp.Play();
+            
 
             firstGuess = true;
             firstCard = true;
             firstGuessIndex = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
             firstGuessPuzzle = gamePuzzles[firstGuessIndex].name;
+        
 
             // Flip Card
 
@@ -375,7 +339,7 @@ public class GameController : MonoBehaviour {
         } else if (!secondGuess) {
 
             
-            cardUp.Play();
+            
             secondGuess = true;
             secondCard = true;
             secondGuessIndex = int.Parse(UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name);
@@ -408,6 +372,7 @@ public class GameController : MonoBehaviour {
 
                 if (flipTimer == 90 || flipTimer == -90)
                 {
+                    
                     Flip();
                 }
             }
@@ -427,6 +392,7 @@ public class GameController : MonoBehaviour {
 
                 if (flipTimer == 90 || flipTimer == -90)
                 {
+                   
                     Flip();
                 }
             }
@@ -442,12 +408,14 @@ public class GameController : MonoBehaviour {
             btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
             btns[firstGuessIndex].interactable = false;
             firstCard = false;
+            audioSource.PlayOneShot(SFX[3], SfxVolume);
         }
 
         else if (secondCard)
         {
             btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
             countGuesses++;
+            audioSource.PlayOneShot(SFX[3], SfxVolume);
             guesses++;
             secondCard = false;
             StartCoroutine(CheckIfThePuzzlesMatch());
@@ -457,7 +425,7 @@ public class GameController : MonoBehaviour {
     {
         whosTurn++;
 
-            if (whosTurn > thePlayers)
+            if (whosTurn > 2)
         {
             whosTurn = 1;
 
@@ -476,15 +444,6 @@ public class GameController : MonoBehaviour {
             score2++;
         }
 
-        else if (whosTurn == 3)
-        {
-            score3++;
-        }
-
-        else if (whosTurn == 4)
-        {
-            score4++;
-        }
     }
 
     IEnumerator CheckIfThePuzzlesMatch ()
@@ -493,10 +452,10 @@ public class GameController : MonoBehaviour {
 
         if (firstGuessPuzzle == secondGuessPuzzle) {
 
-            randompos.clip = audioClipArray[Random.Range(0, audioClipArray.Length)];
-            randompos.PlayOneShot(randompos.clip);
+          
+            audioSource.PlayOneShot(positive[Random.Range(0, positive.Length)], SfxVolume);
 
-            getPoint.Play();
+            audioSource.PlayOneShot(SFX[1], SfxVolume);
             Givescore();
            
             yield return new WaitForSeconds(1.5f);
@@ -505,7 +464,7 @@ public class GameController : MonoBehaviour {
             btns[secondGuessIndex].interactable = false;
 
             btns[firstGuessIndex].image.color = new Color (217, 150, 204, 60);
-            // btns[secondGuessIndex].image.color = new Color (0, 0, 0, 0);
+            
 
             
 
@@ -516,11 +475,11 @@ public class GameController : MonoBehaviour {
 
             yield return new WaitForSeconds(.5f);
 
-            CardDown.Play();
+            
             yield return new WaitForSeconds(.3f);
             
-            randomneg.clip = audioClipArrayneg[Random.Range(0, audioClipArrayneg.Length)];
-            randomneg.PlayOneShot(randomneg.clip);
+         
+            audioSource.PlayOneShot(negative[Random.Range(0, negative.Length)], SfxVolume);
 
             StartCoroutine(FlipCardsback());
 
@@ -550,9 +509,11 @@ public class GameController : MonoBehaviour {
                 {
                 btns[firstGuessIndex].image.sprite = bgImage;
                 btns[secondGuessIndex].image.sprite = bgImage;
-                }
+                audioSource.PlayOneShot(SFX[4], SfxVolume);
+            }
             }
         btns[firstGuessIndex].interactable = true;
+        
         ChangePlayer();
         flipTimer = 0;
         
@@ -563,13 +524,10 @@ public class GameController : MonoBehaviour {
         countCorrectGuesses++;
       
         if (countCorrectGuesses == gameGuesses) {
-         
-            success.Play();
-            music.Stop();
-            endTalk.Play();
-            gameoverplate.SetActive(true);
-            EndScoreHolder.transform.localPosition = new Vector2(0, -150); 
-    
+
+            audioSource.PlayOneShot(SFX[2], SfxVolume);
+
+            DisplayEnd();
         }
 
     }
@@ -599,64 +557,155 @@ public class GameController : MonoBehaviour {
             puzzles[i] = tempGO;
         }
     }
-    public void TwoInARow()
+
+    public void OpenMeny()
     {
-        if (gameLevel == 1)
-        {
-            Player1Score.transform.localPosition = new Vector2(-250, 350);
+        
 
-            Player2Score.transform.localPosition = new Vector2(250, 350);
-        }
-        else if (gameLevel == 2)
+       if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
-            Player1Score.transform.localPosition = new Vector2(-250, 380);
+            Timer timercounting = timerDisplay.GetComponent<Timer>();
 
-            Player2Score.transform.localPosition = new Vector2(250, 380);
+            timercounting.counting = false;
+            menuPlate.SetActive(true);
         }
 
-        else if (gameLevel == 3)
+        else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
         {
-            Player1Score.transform.localPosition = new Vector2(-250, 350);
-
-            Player2Score.transform.localPosition = new Vector2(250, 350);
+            menuPlate.SetActive(true);
         }
-
-       
-    }
-
-        public void ThreeInARow()
-    {
-        if (gameLevel == 1)
-        {
-            Player1Score.transform.localPosition = new Vector2(-500, 350);
-
-            Player2Score.transform.localPosition = new Vector2(0, 350);
-
-            Player3Score.transform.localPosition = new Vector2(500, 350);
-        }
-
-        else if (gameLevel == 2)
-        {
-            Player1Score.transform.localPosition = new Vector2(-500, 380);
-
-            Player2Score.transform.localPosition = new Vector2(0, 380);
-
-            Player3Score.transform.localPosition = new Vector2(500, 380);
-        }
-
-        else if (gameLevel == 3)
-        {
-            Player1Score.transform.localPosition = new Vector2(-500, 350);
-
-            Player2Score.transform.localPosition = new Vector2(0, 350);
-
-            Player3Score.transform.localPosition = new Vector2(500, 350);
-        }
-
 
     }
 
+    public void CloseMenu()
+    {
+        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
+        {
+            Timer timercounting = timerDisplay.GetComponent<Timer>();
 
-    
+            timercounting.counting = true;
+            menuPlate.SetActive(false);
+        }
+
+        else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
+        {
+            menuPlate.SetActive(false);
+        }
+    }
+
+    public void DisplayEnd()
+    {
+        music.Stop();
+
+        gameoverplate.SetActive(true);
+
+        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
+        {
+            Timer endTime = timer.GetComponent<Timer>();
+
+            endMessage.text = "Tid: " + endTime.timer.text;
+            endmessage2.text = "Försök: " + guesses;
+
+            if (myChoice.myHelpers == JoinedPlayers.Helpers.PIP)
+            {
+                if (endTime.timerValue < 10)
+                {
+                    audioSource.PlayOneShot(endTalk[0], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 20)
+                {
+                    audioSource.PlayOneShot(endTalk[1], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 30)
+                {
+                    audioSource.PlayOneShot(endTalk[2], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 60)
+                {
+                    audioSource.PlayOneShot(endTalk[3], SfxVolume);
+                }
+                else if (endTime.timerValue < 90)
+                {
+                    audioSource.PlayOneShot(endTalk[4], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 120)
+                {
+                    audioSource.PlayOneShot(endTalk[5], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 300)
+                {
+                    audioSource.PlayOneShot(endTalk[6], SfxVolume);
+                }
+            }
+
+            else if (myChoice.myHelpers == JoinedPlayers.Helpers.MAYOR)
+            {
+                if (endTime.timerValue < 10)
+                {
+                    audioSource.PlayOneShot(endTalk[7], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 20)
+                {
+                    audioSource.PlayOneShot(endTalk[8], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 30)
+                {
+                    audioSource.PlayOneShot(endTalk[9], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 60)
+                {
+                    audioSource.PlayOneShot(endTalk[10], SfxVolume);
+                }
+                else if (endTime.timerValue < 90)
+                {
+                    audioSource.PlayOneShot(endTalk[11], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 120)
+                {
+                    audioSource.PlayOneShot(endTalk[12], SfxVolume);
+                }
+
+                else if (endTime.timerValue < 300)
+                {
+                    audioSource.PlayOneShot(endTalk[13], SfxVolume);
+                }
+            }
+        }
+
+        else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
+        {
+            if (score1 > score2)
+            {
+                pepTalk.text = "Grattis Lag Pip!";
+                audioSource.PlayOneShot(endTalk[Random.Range(14,17)]);
+            }
+
+
+            else if (score2 > score1)
+            {
+                pepTalk.text = "Grattis Lag Borgmästaren!";
+                audioSource.PlayOneShot(endTalk[Random.Range(18, 19)]);
+            }
+
+
+            else if (score1 == score2)
+            {
+                pepTalk.text = "Lika! Grattis till er båda!";
+            }
+
+            endMessage.text = "Team Pip: " + score1;
+            endmessage2.text = " Team Borgis: " + score2;
+        }
+    } 
+ 
 
  }

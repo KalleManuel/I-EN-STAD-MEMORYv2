@@ -7,61 +7,52 @@ using UnityEngine.SceneManagement;
 public class SceneController : MonoBehaviour
 {
 
-    public GameObject playersInGame;
 
+    // controll scenes
 
-    // Start is called before the first frame update
-    void Start()
+    public void StartFromStcratch()
     {
-        playersInGame = GameObject.FindGameObjectWithTag("Players");
+        StartCoroutine(WaitforSeconds(1f));
+       
     }
 
-    // Update is called once per frame
-    void Update()
+    public void StartMenu()
     {
-        
-    }
+        GameObject joinedPlayers = GameObject.FindGameObjectWithTag("PlayersChoice");
+        Destroy(joinedPlayers);
 
-
-        // controll levels
-
-    public void Playeasy()
-        {
         SceneManager.LoadScene(1);
-        }
+        
 
-    public void Playmedium()
-        {
-        SceneManager.LoadScene(2);
-        }
 
-    public void Playhard()
-        {
-        SceneManager.LoadScene(3);
-        }
-
-    public void GoToCommercial()
-        {
-        SceneManager.LoadScene(4);
-        GameObject.Destroy(playersInGame);
     }
 
-    public void GoToMenu()
+    public void Play()
         {
-        SceneManager.LoadScene(0);
-        GameObject.Destroy(playersInGame);
-       }
 
-        public void PlayAgain()
+        SceneManager.LoadScene(2);
+
+        }
+
+     public void PlayAgain()
         {
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
-        public void doquit()
+     public void doquit()
         {
         Application.Quit();
 
         }
+
+    IEnumerator WaitforSeconds(float sec)
+    {
+
+        yield return new WaitForSeconds(sec);
+
+        StartMenu();
+
+    }
 
     }
