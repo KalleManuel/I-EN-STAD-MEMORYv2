@@ -12,6 +12,7 @@ public class HudController : MonoBehaviour
 
     public Vector3 firstAvatarPos;
     public Vector3 secondAvatorPos;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -21,6 +22,7 @@ public class HudController : MonoBehaviour
 
         firstAvatarPos = new Vector3(-200,0, 0);
         secondAvatorPos = new Vector3(210, 0, 0);
+        
 
         if (joinedPlayers.myHelpers == JoinedPlayers.Helpers.MAYOR)
         {

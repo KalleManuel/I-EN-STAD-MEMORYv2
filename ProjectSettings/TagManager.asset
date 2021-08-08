@@ -11,6 +11,7 @@ TagManager:
   - GameControl
   - Music
   - Canvas
+  - menu
   layers:
   - Default
   - TransparentFX

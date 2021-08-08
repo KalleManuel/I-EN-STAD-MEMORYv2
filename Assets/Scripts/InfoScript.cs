@@ -20,6 +20,7 @@ public class InfoScript : MonoBehaviour
     public float speed;
 
     public StartMenu timer;
+    public GameObject theClock;
 
 
     // Start is called before the first frame update
@@ -33,7 +34,8 @@ public class InfoScript : MonoBehaviour
 
         speed = 30f;
 
-        timer = GetComponent<StartMenu>();
+        theClock = GameObject.FindGameObjectWithTag("menu");
+        timer = theClock.GetComponent<StartMenu>();
 
         
     }
@@ -81,6 +83,7 @@ public class InfoScript : MonoBehaviour
         else if (panel == 3)
         {
             panel = 2;
+            
         }
 
     }
@@ -106,6 +109,7 @@ public class InfoScript : MonoBehaviour
     public void CloseInfo()
     {
         timer.timer = timer.TimeUntilNextHint;
+        
         Destroy(gameObject);
     }
 

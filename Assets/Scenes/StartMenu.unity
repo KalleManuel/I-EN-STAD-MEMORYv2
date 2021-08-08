@@ -2728,7 +2728,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 106.32001}
+  m_AnchoredPosition: {x: 0, y: 106.32031}
   m_SizeDelta: {x: 0, y: -772.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1353485865
@@ -3029,7 +3029,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -177.96997}
+  m_AnchoredPosition: {x: 0, y: -177.97076}
   m_SizeDelta: {x: 0, y: -818.77}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1502698021
@@ -4031,7 +4031,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -424.29004}
+  m_AnchoredPosition: {x: 0, y: -424.29108}
   m_SizeDelta: {x: 0, y: -848.58}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1794342409
@@ -4371,7 +4371,7 @@ GameObject:
   - component: {fileID: 1906328914}
   m_Layer: 0
   m_Name: MenyController
-  m_TagString: Untagged
+  m_TagString: menu
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

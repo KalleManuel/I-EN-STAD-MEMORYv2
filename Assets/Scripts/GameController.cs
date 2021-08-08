@@ -564,7 +564,7 @@ public class GameController : MonoBehaviour {
 
        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
-            Timer timercounting = timerDisplay.GetComponent<Timer>();
+            Timer timercounting = timer.GetComponent<Timer>();
 
             timercounting.counting = false;
             menuPlate.SetActive(true);
@@ -581,7 +581,7 @@ public class GameController : MonoBehaviour {
     {
         if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
-            Timer timercounting = timerDisplay.GetComponent<Timer>();
+            Timer timercounting = timer.GetComponent<Timer>();
 
             timercounting.counting = true;
             menuPlate.SetActive(false);
@@ -603,6 +603,7 @@ public class GameController : MonoBehaviour {
         {
             Timer endTime = timer.GetComponent<Timer>();
 
+            pepTalk.text = "Bra hittat!";
             endMessage.text = "Tid: " + endTime.timer.text;
             endmessage2.text = "Försök: " + guesses;
 

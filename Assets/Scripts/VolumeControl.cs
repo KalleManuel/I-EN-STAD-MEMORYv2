@@ -23,7 +23,7 @@ public class VolumeControl : MonoBehaviour
 
         musicController = music.GetComponent<AudioSource>();
 
-        musicSlider.value = 0.484f;
+        musicSlider.value = 0.25f;
 
 
 
