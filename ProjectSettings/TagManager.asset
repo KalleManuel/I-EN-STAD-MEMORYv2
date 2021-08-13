@@ -12,6 +12,8 @@ TagManager:
   - Music
   - Canvas
   - menu
+  - SettingBG
+  - SFX
   layers:
   - Default
   - TransparentFX
@@ -21,7 +23,7 @@ TagManager:
   - UI
   - Pip
   - Borgis
-  - 
+  - overlay
   - 
   - 
   - 
@@ -57,4 +59,7 @@ TagManager:
     locked: 0
   - name: canvas
     uniqueID: 2281313255
+    locked: 0
+  - name: overlay
+    uniqueID: 4219705571
     locked: 0

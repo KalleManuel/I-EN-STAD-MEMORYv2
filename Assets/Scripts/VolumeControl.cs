@@ -8,33 +8,41 @@ public class VolumeControl : MonoBehaviour
     public Slider musicSlider;
     public Slider SFXSlider;
     public GameObject music;
-    public GameObject gameCon;
-    public AudioSource SFXController;
+    public GameObject sfxCon;
+    public AudioSource sfxPlayer;
     public AudioSource musicController;
-    public GameController SFX;
+    public VoiceAndSFX sfx;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        gameCon = GameObject.FindGameObjectWithTag("GameControl");
-        SFXController = gameCon.GetComponent<AudioSource>();
-        SFX.GetComponent<GameController>();
+      sfxCon = GameObject.FindGameObjectWithTag("SFX");
+        sfxPlayer = sfxCon.GetComponent<AudioSource>();
+       sfx = sfxCon.GetComponent<VoiceAndSFX>();
+
+        music = GameObject.FindGameObjectWithTag("Music");
 
         musicController = music.GetComponent<AudioSource>();
 
-        musicSlider.value = 0.25f;
-
-
-
+        musicSlider.value = musicController.volume;
+      SFXSlider.value = sfx.SfxVolume;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        SFXController.volume = SFXSlider.value;
+        // 
+      sfxPlayer.volume = SFXSlider.value;
         musicController.volume = musicSlider.value;
-        SFX.SfxVolume = SFXSlider.value; 
+       sfx.SfxVolume = SFXSlider.value; 
+    }
+
+    public void CloseSetttings()
+    {
+
+        Destroy(this.gameObject);
+
     }
 }

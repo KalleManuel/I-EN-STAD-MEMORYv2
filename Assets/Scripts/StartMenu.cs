@@ -48,15 +48,13 @@ public class StartMenu : MonoBehaviour
 
     public GameObject infoPrefab;
 
-    // audio
-
-    public AudioSource VoicePlayer;
-
-    public AudioClip[] voiceClip;
 
     public float timer;
     public int hint;
     public int TimeUntilNextHint = 20;
+
+    public GameObject SFXController;
+    public VoiceAndSFX sfx;
 
 
     // Start is called before the first frame update
@@ -85,6 +83,11 @@ public class StartMenu : MonoBehaviour
 
         timer = TimeUntilNextHint;
         hint = 7;
+
+        SFXController = GameObject.FindGameObjectWithTag("SFX");
+        sfx = SFXController.GetComponent<VoiceAndSFX>();
+
+
     }
 
     // Update is called once per frame
@@ -98,8 +101,8 @@ public class StartMenu : MonoBehaviour
         }
         else
         {
-            ;
-            VoicePlayer.PlayOneShot(voiceClip[hint]);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[hint],sfx.SfxVolume);
+       
             timer = TimeUntilNextHint;
 
             if (hint == 7)
@@ -184,7 +187,7 @@ public class StartMenu : MonoBehaviour
             twoPlayersImage.color = deselected;
             pipImage.color = selected;
             borgisImage.color = deselected;
-            VoicePlayer.PlayOneShot(voiceClip[0], 1);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[0], sfx.SfxVolume);
 
             joinedPlayers.myPlayerMode = JoinedPlayers.PlayerMode.ONEPLAYER;
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
@@ -209,7 +212,7 @@ public class StartMenu : MonoBehaviour
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.BOTH;
             PipFrameshake.SetTrigger("PShake");
             borgisFrameShake.SetTrigger("BShake");
-            VoicePlayer.PlayOneShot(voiceClip[1], 1);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[1], sfx.SfxVolume);
             timer = TimeUntilNextHint;
         }
         else return;
@@ -227,13 +230,13 @@ public class StartMenu : MonoBehaviour
             pip = false;
 
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.MAYOR;
-            VoicePlayer.PlayOneShot(voiceClip[3], 1);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[3], sfx.SfxVolume);
             timer = TimeUntilNextHint;
         }
 
         else
         {
-            VoicePlayer.PlayOneShot(voiceClip[10]);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
             timer = TimeUntilNextHint;
 
         }
@@ -248,13 +251,13 @@ public class StartMenu : MonoBehaviour
             pip = true;
             mayor = false;
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
-            VoicePlayer.PlayOneShot(voiceClip[2], 1);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[2], sfx.SfxVolume);
             timer = TimeUntilNextHint;
         }
 
         else
         {
-            VoicePlayer.PlayOneShot(voiceClip[10]);
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
             timer = TimeUntilNextHint;
 
         }
@@ -263,7 +266,7 @@ public class StartMenu : MonoBehaviour
     public void SelectEasy()
     {
         dificulty = 1;
-        VoicePlayer.PlayOneShot(voiceClip[4], 1);
+        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[4], sfx.SfxVolume);
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.EASY;
         timer = TimeUntilNextHint;
     }
@@ -271,7 +274,7 @@ public class StartMenu : MonoBehaviour
     public void SelectMedium()
     {
         dificulty = 2;
-        VoicePlayer.PlayOneShot(voiceClip[5], 1);
+        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[5], sfx.SfxVolume);
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.MEDIUM;
         timer = TimeUntilNextHint;
     }
@@ -279,21 +282,22 @@ public class StartMenu : MonoBehaviour
     public void SelectHard()
     {
         dificulty = 3;
-        VoicePlayer.PlayOneShot(voiceClip[6], 1);
+        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[6], sfx.SfxVolume);
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.HARD;
         timer = TimeUntilNextHint;
     }
 
     public void Info()
     {
+
         GameObject infosquare = Instantiate(infoPrefab, new Vector3(0, 0, 0), Quaternion.identity, GameObject.FindGameObjectWithTag("Canvas").transform);
         timer = 500;
     }
 
     public void Help()
     {
-        VoicePlayer.PlayOneShot(voiceClip[9], 1);
-        timer = voiceClip[9].length + TimeUntilNextHint;
+        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[9], sfx.SfxVolume);
+        timer = sfx.menuVoiceClip[9].length + TimeUntilNextHint;
     }
 
     

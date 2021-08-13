@@ -88,6 +88,7 @@ public class GameController : MonoBehaviour {
     [Header("Menu")]
 
     public GameObject menuPlate;
+    public GameObject sliderBack;
 
     [Header("Flip cards")]
 
@@ -105,51 +106,20 @@ public class GameController : MonoBehaviour {
 
     [Header("Audio")]
 
-    // pips talk
-
-
-    public AudioSource audioSource;
-
-    public AudioClip[] happyMayor;
-
-    public AudioClip[] sadMayor;
-
-    public AudioClip[] happyPip;
-
-    public AudioClip [] sadPip;
-
-    public AudioClip[] positive;
-
-    public AudioClip [] negative;
-
-    public AudioClip[] SFX; // 1 get point, 2 sucess, 3 card up, 4 card down
-
-    public AudioClip[] teamMayor;
-    public AudioClip[] teamPip;
-
-
-    public AudioClip[] endTalk;
-
-    // Volumecontroll
-
-    public float SfxVolume;
 
     public AudioSource music;
-
-
-
-  
+    public VoiceAndSFX sfx;
 
     void Awake()
     {
-        puzzles = Resources.LoadAll<Sprite>("Sprites/CARDSV2");
-    
 
-    
-   }
+        puzzles = Resources.LoadAll<Sprite>("Sprites/CARDSV2");
+
+    }
     
     void Start()
     {
+
         ShuffleDeck();
         GetButtons();
         AddGamePuzzles();
@@ -160,15 +130,24 @@ public class GameController : MonoBehaviour {
         firstCard = false;
         secondCard = false;
         menuPlate.SetActive(false);
-        SfxVolume = 0.5f;
+       
 
         // get and display player choices
+
+        GameObject musicController = GameObject.FindGameObjectWithTag("Music");
+        music = musicController.GetComponent<AudioSource>();
+
+        playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
+        myChoice = playersChoices.GetComponent<JoinedPlayers>();
+
+        GameObject sfxCon = GameObject.FindGameObjectWithTag("SFX");
+        sfx = sfxCon.GetComponent<VoiceAndSFX>();
+
+        sfx.sfxPlayer.PlayOneShot(sfx.SFX[5],sfx.SfxVolume);
 
         pipBackground.GetComponent<Image>().sprite = greenBack;
         borgisBackground.GetComponent<Image>().sprite = redBack;
 
-        playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
-        myChoice = playersChoices.GetComponent<JoinedPlayers>();
 
         if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
@@ -179,14 +158,14 @@ public class GameController : MonoBehaviour {
 
             if (myChoice.myHelpers == JoinedPlayers.Helpers.MAYOR)
             {
-                negative = sadMayor;
-                positive = happyMayor;
+               sfx.negative = sfx.sadMayor;
+                sfx.positive = sfx.happyMayor;
             }
 
             else if (myChoice.myHelpers == JoinedPlayers.Helpers.PIP)
             {
-                positive = happyPip;
-                negative = sadPip;
+                sfx.positive = sfx.happyPip;
+                sfx.negative = sfx.sadPip;
             }
         }
 
@@ -243,8 +222,8 @@ public class GameController : MonoBehaviour {
                     Player2Score.fontSize--;
                 }
 
-                negative = sadPip;
-                positive = happyPip;
+                sfx.negative = sfx.sadPip;
+                sfx.positive = sfx.happyPip;
 
 
             }
@@ -268,8 +247,8 @@ public class GameController : MonoBehaviour {
                     Player2Score.fontSize++;
                 }
 
-                negative = sadMayor;
-                positive = happyMayor;
+                sfx.negative = sfx.sadMayor;
+                sfx.positive = sfx.happyMayor;
 
             }
 
@@ -408,14 +387,14 @@ public class GameController : MonoBehaviour {
             btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
             btns[firstGuessIndex].interactable = false;
             firstCard = false;
-            audioSource.PlayOneShot(SFX[3], SfxVolume);
+            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
         }
 
         else if (secondCard)
         {
             btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
             countGuesses++;
-            audioSource.PlayOneShot(SFX[3], SfxVolume);
+            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
             guesses++;
             secondCard = false;
             StartCoroutine(CheckIfThePuzzlesMatch());
@@ -451,11 +430,10 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds (.5f);
 
         if (firstGuessPuzzle == secondGuessPuzzle) {
-
           
-            audioSource.PlayOneShot(positive[Random.Range(0, positive.Length)], SfxVolume);
+            sfx.sfxPlayer.PlayOneShot(sfx.positive[Random.Range(0, sfx.positive.Length)], sfx.SfxVolume);
 
-            audioSource.PlayOneShot(SFX[1], SfxVolume);
+            sfx.sfxPlayer.PlayOneShot(sfx.SFX[1], sfx.SfxVolume);
             Givescore();
            
             yield return new WaitForSeconds(1.5f);
@@ -464,22 +442,20 @@ public class GameController : MonoBehaviour {
             btns[secondGuessIndex].interactable = false;
 
             btns[firstGuessIndex].image.color = new Color (217, 150, 204, 60);
-            
-
-            
+      
 
             CheckIfGameIsFinished();
         }
 
         else { 
 
-            yield return new WaitForSeconds(.5f);
+           // yield return new WaitForSeconds(.5f);
 
             
             yield return new WaitForSeconds(.3f);
             
          
-            audioSource.PlayOneShot(negative[Random.Range(0, negative.Length)], SfxVolume);
+            sfx.sfxPlayer.PlayOneShot(sfx.negative[Random.Range(0, sfx.negative.Length)], sfx.SfxVolume);
 
             StartCoroutine(FlipCardsback());
 
@@ -509,7 +485,7 @@ public class GameController : MonoBehaviour {
                 {
                 btns[firstGuessIndex].image.sprite = bgImage;
                 btns[secondGuessIndex].image.sprite = bgImage;
-                audioSource.PlayOneShot(SFX[4], SfxVolume);
+                sfx.sfxPlayer.PlayOneShot(sfx.SFX[4], sfx.SfxVolume);
             }
             }
         btns[firstGuessIndex].interactable = true;
@@ -525,7 +501,10 @@ public class GameController : MonoBehaviour {
       
         if (countCorrectGuesses == gameGuesses) {
 
-            audioSource.PlayOneShot(SFX[2], SfxVolume);
+            Timer endTime = timer.GetComponent<Timer>();
+            endTime.counting = false;
+            sfx.sfxPlayer.PlayOneShot(sfx.SFX[2], sfx.SfxVolume);
+            
 
             DisplayEnd();
         }
@@ -568,11 +547,13 @@ public class GameController : MonoBehaviour {
 
             timercounting.counting = false;
             menuPlate.SetActive(true);
+            sliderBack.SetActive(false);
         }
 
         else if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
         {
             menuPlate.SetActive(true);
+            sliderBack.SetActive(false);
         }
 
     }
@@ -584,6 +565,7 @@ public class GameController : MonoBehaviour {
             Timer timercounting = timer.GetComponent<Timer>();
 
             timercounting.counting = true;
+            sliderBack.SetActive(true);
             menuPlate.SetActive(false);
         }
 
@@ -611,36 +593,36 @@ public class GameController : MonoBehaviour {
             {
                 if (endTime.timerValue < 10)
                 {
-                    audioSource.PlayOneShot(endTalk[0], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[0], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 20)
                 {
-                    audioSource.PlayOneShot(endTalk[1], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[1], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 30)
                 {
-                    audioSource.PlayOneShot(endTalk[2], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[2], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 60)
                 {
-                    audioSource.PlayOneShot(endTalk[3], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[3], sfx.SfxVolume);
                 }
                 else if (endTime.timerValue < 90)
                 {
-                    audioSource.PlayOneShot(endTalk[4], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[4], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 120)
                 {
-                    audioSource.PlayOneShot(endTalk[5], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[5], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 300)
                 {
-                    audioSource.PlayOneShot(endTalk[6], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[6], sfx.SfxVolume);
                 }
             }
 
@@ -648,36 +630,36 @@ public class GameController : MonoBehaviour {
             {
                 if (endTime.timerValue < 10)
                 {
-                    audioSource.PlayOneShot(endTalk[7], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[7], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 20)
                 {
-                    audioSource.PlayOneShot(endTalk[8], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[8], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 30)
                 {
-                    audioSource.PlayOneShot(endTalk[9], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[9], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 60)
                 {
-                    audioSource.PlayOneShot(endTalk[10], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[10], sfx.SfxVolume);
                 }
                 else if (endTime.timerValue < 90)
                 {
-                    audioSource.PlayOneShot(endTalk[11], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[11], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 120)
                 {
-                    audioSource.PlayOneShot(endTalk[12], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[12], sfx.SfxVolume);
                 }
 
                 else if (endTime.timerValue < 300)
                 {
-                    audioSource.PlayOneShot(endTalk[13], SfxVolume);
+                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[13], sfx.SfxVolume);
                 }
             }
         }
@@ -687,14 +669,14 @@ public class GameController : MonoBehaviour {
             if (score1 > score2)
             {
                 pepTalk.text = "Grattis Lag Pip!";
-                audioSource.PlayOneShot(endTalk[Random.Range(14,17)]);
+                sfx.sfxPlayer.PlayOneShot(sfx.endTalk[Random.Range(14,17)]);
             }
 
 
             else if (score2 > score1)
             {
                 pepTalk.text = "Grattis Lag Borgmästaren!";
-                audioSource.PlayOneShot(endTalk[Random.Range(18, 19)]);
+                sfx.sfxPlayer.PlayOneShot(sfx.endTalk[Random.Range(18, 19)]);
             }
 
 

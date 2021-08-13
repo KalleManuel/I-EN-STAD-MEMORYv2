@@ -5,41 +5,65 @@ using UnityEngine;
 public class MusicController : MonoBehaviour
 {
 
-    public AudioClip easy, medium, hard;
+    public AudioClip start, easy, medium, hard;
 
     public GameObject playersChoices;
     public JoinedPlayers choiceOfLevel;
     public AudioSource musicPlayer;
+    public bool gameOn = false;
+    public bool changeMusic;
+
 
     // Start is called before the first frame update
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Start()
     {
-        playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
-        choiceOfLevel = playersChoices.GetComponent<JoinedPlayers>();
+        gameOn = false;
+        changeMusic = true;
+        
+    }
 
-      
-
-
-        if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.EASY)
+    private void Update()
+    {
+        if (!gameOn && changeMusic)
         {
-            musicPlayer.clip = easy;
+            musicPlayer.clip = start;
+            musicPlayer.Play();
             musicPlayer.loop = true;
-            
+            changeMusic = false;
         }
 
-        else if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.MEDIUM)
+        else if (gameOn && changeMusic)
         {
-            musicPlayer.clip = medium;
-            musicPlayer.loop = true;
-        }
+            playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
+            choiceOfLevel = playersChoices.GetComponent<JoinedPlayers>();
 
-        else if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.HARD)
-        {
-            musicPlayer.clip = hard;
-            musicPlayer.loop = true;
-        }
+            if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.EASY)
+            {
+                musicPlayer.clip = easy;
 
-        musicPlayer.Play();
+            }
+
+            else if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.MEDIUM)
+            {
+                musicPlayer.clip = medium;
+
+            }
+
+            else if (choiceOfLevel.myDyfficulty == JoinedPlayers.Difficulty.HARD)
+            {
+                musicPlayer.clip = hard;
+
+            }
+
+            musicPlayer.Play();
+            musicPlayer.loop = true;
+            changeMusic = false;
+        }
     }
 
 }

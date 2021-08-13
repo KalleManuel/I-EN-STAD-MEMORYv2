@@ -2,24 +2,65 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VoiceStart : MonoBehaviour
+public class VoiceAndSFX : MonoBehaviour
 {
 
-    public AudioSource VoicePlayer;
+    public AudioSource sfxPlayer;
+    public float SfxVolume;
 
-    public AudioClip welcome, wannaPlay, pressPlay;
+    public int scene;
+
+    [Header("Start Scene")]
+
+    public AudioClip [] startClips;
 
     public bool next, second, third, timeToPlay;
 
     public float waitBetween;
     public float randomWait;
 
-   
+    [Header("Start Menu")]
+
+    public AudioClip[] menuVoiceClip;
+
+     [Header("Game Scene")]
+
+    public AudioSource audioSource;
+
+    public AudioClip[] happyMayor;
+
+    public AudioClip[] sadMayor;
+
+    public AudioClip[] happyPip;
+
+    public AudioClip[] sadPip;
+
+    public AudioClip[] positive;
+
+    public AudioClip[] negative;
+
+    public AudioClip[] SFX; // 1 get point, 2 sucess, 3 card up, 4 card down
+
+    public AudioClip[] teamMayor;
+    public AudioClip[] teamPip;
+
+
+    public AudioClip[] endTalk;
+
 
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
     void Start()
     {
-       
+        scene = 1;
+        SfxVolume = 0.5f;
+
+
         second = false;
         third = false;
         next = false;
@@ -30,21 +71,25 @@ public class VoiceStart : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timeToPlay)
+        if (scene == 1)
         {
-            if (second)
+            if (timeToPlay)
             {
-                timeToPlay = false;
-                PlaySecond();
+                if (second)
+                {
+                    timeToPlay = false;
+                    PlaySecond();
 
+                }
+
+                else if (third)
+                {
+                    timeToPlay = false;
+                    PlayThird();
+
+                }
             }
-
-            else if (third)
-            {
-                timeToPlay = false;
-                PlayThird();
-
-            }
+        
         }
        
     }
@@ -85,16 +130,15 @@ public class VoiceStart : MonoBehaviour
 
     }
 
-    
 
     IEnumerator PlayFirst()
     {
         yield return new WaitForSeconds(1);
 
         //VoicePlayer.clip = welcome;
-        VoicePlayer.PlayOneShot(welcome, 1);
+        sfxPlayer.PlayOneShot(startClips[0], SfxVolume);
         randomWait = Random.Range(5f, 10f);
-        waitBetween = welcome.length + randomWait;
+        waitBetween = startClips[0].length + randomWait;
         next = true;
         StartCoroutine(WaitClipLenght());
 
@@ -104,9 +148,9 @@ public class VoiceStart : MonoBehaviour
     public void PlaySecond()
     {
         //VoicePlayer.clip = wannaPlay;
-        VoicePlayer.PlayOneShot(wannaPlay,1);
+        sfxPlayer.PlayOneShot(startClips[1],SfxVolume);
         randomWait = Random.Range(5f, 10f);
-        waitBetween = wannaPlay.length + randomWait;
+        waitBetween = startClips[1].length + randomWait;
         next = true;
         StartCoroutine(WaitClipLenght());
     }
@@ -116,9 +160,9 @@ public class VoiceStart : MonoBehaviour
 
 
         //VoicePlayer.clip = pressPlay;
-        VoicePlayer.PlayOneShot(pressPlay, 1);
+        sfxPlayer.PlayOneShot(startClips[2], SfxVolume);
         randomWait = Random.Range(5f, 10f);
-        waitBetween = pressPlay.length + randomWait;
+        waitBetween = startClips[2].length + randomWait;
         next = true;
         StartCoroutine(WaitClipLenght());
 
