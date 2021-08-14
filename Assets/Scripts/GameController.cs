@@ -32,6 +32,7 @@ public class GameController : MonoBehaviour {
 
     public bool firstCard;
     public bool secondCard;
+    public int openedCards;
 
 
     // shuffle cards
@@ -148,6 +149,7 @@ public class GameController : MonoBehaviour {
         pipBackground.GetComponent<Image>().sprite = greenBack;
         borgisBackground.GetComponent<Image>().sprite = redBack;
 
+        openedCards = 0;
 
         if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
         {
@@ -430,13 +432,21 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds (.5f);
 
         if (firstGuessPuzzle == secondGuessPuzzle) {
-          
+
+            openedCards += 2;
+
+            if (openedCards == gamePuzzles.Count)
+            {
+                Timer endTime = timer.GetComponent<Timer>();
+                endTime.counting = false;
+            }
+
             sfx.sfxPlayer.PlayOneShot(sfx.positive[Random.Range(0, sfx.positive.Length)], sfx.SfxVolume);
 
             sfx.sfxPlayer.PlayOneShot(sfx.SFX[1], sfx.SfxVolume);
             Givescore();
            
-            yield return new WaitForSeconds(1.5f);
+            
 
             btns[firstGuessIndex].interactable = false;
             btns[secondGuessIndex].interactable = false;
@@ -448,9 +458,6 @@ public class GameController : MonoBehaviour {
         }
 
         else { 
-
-           // yield return new WaitForSeconds(.5f);
-
             
             yield return new WaitForSeconds(.3f);
             
@@ -501,8 +508,7 @@ public class GameController : MonoBehaviour {
       
         if (countCorrectGuesses == gameGuesses) {
 
-            Timer endTime = timer.GetComponent<Timer>();
-            endTime.counting = false;
+            
             sfx.sfxPlayer.PlayOneShot(sfx.SFX[2], sfx.SfxVolume);
             
 

@@ -56,6 +56,13 @@ public class StartMenu : MonoBehaviour
     public GameObject SFXController;
     public VoiceAndSFX sfx;
 
+    public GameObject explained;
+    public bool helpMode;
+    public float helpTime;
+    
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -65,6 +72,7 @@ public class StartMenu : MonoBehaviour
         onePlayerGame = true;
         twoPlayerGame = false;
 
+        helpMode = false;
         //default helper
         mayor = false;
         pip = true;
@@ -87,12 +95,29 @@ public class StartMenu : MonoBehaviour
         SFXController = GameObject.FindGameObjectWithTag("SFX");
         sfx = SFXController.GetComponent<VoiceAndSFX>();
 
+        explained.SetActive(false);
 
+        helpTime = 0;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+
+        if (helpMode)
+        {
+            helpTime += Time.deltaTime;
+
+            if (helpTime > 33.5f)
+            {
+                CloseHelp();
+            }
+        }
+
+        // Play a hint
+
         float degreesPerSecond = speed * Time.deltaTime;
 
         if (timer > 0)
@@ -112,6 +137,8 @@ public class StartMenu : MonoBehaviour
 
             else hint = 7;
         }
+
+        // change rotattion of arrow in dificulty meter
 
         if (dificulty == 1)
         { 
@@ -187,11 +214,14 @@ public class StartMenu : MonoBehaviour
             twoPlayersImage.color = deselected;
             pipImage.color = selected;
             borgisImage.color = deselected;
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[0], sfx.SfxVolume);
-
             joinedPlayers.myPlayerMode = JoinedPlayers.PlayerMode.ONEPLAYER;
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
             timer = TimeUntilNextHint;
+
+            if (!helpMode)
+            {
+                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[0], sfx.SfxVolume);
+            }
 
         }
         else return;
@@ -212,8 +242,13 @@ public class StartMenu : MonoBehaviour
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.BOTH;
             PipFrameshake.SetTrigger("PShake");
             borgisFrameShake.SetTrigger("BShake");
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[1], sfx.SfxVolume);
             timer = TimeUntilNextHint;
+
+            if (!helpMode)
+            {
+                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[1], sfx.SfxVolume);
+            }
+          
         }
         else return;
       
@@ -230,14 +265,18 @@ public class StartMenu : MonoBehaviour
             pip = false;
 
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.MAYOR;
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[3], sfx.SfxVolume);
             timer = TimeUntilNextHint;
+
+            if (!helpMode)
+            {
+                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[3], sfx.SfxVolume);
+            }
         }
 
         else
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
-            timer = TimeUntilNextHint;
+           
+           
 
         }
     }
@@ -251,14 +290,21 @@ public class StartMenu : MonoBehaviour
             pip = true;
             mayor = false;
             joinedPlayers.myHelpers = JoinedPlayers.Helpers.PIP;
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[2], sfx.SfxVolume);
             timer = TimeUntilNextHint;
+
+            if (!helpMode)
+            {
+                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[2], sfx.SfxVolume);
+            }
         }
 
         else
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
-            timer = TimeUntilNextHint;
+            if (!helpMode)
+            {
+                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
+                timer = TimeUntilNextHint;
+            }
 
         }
     }
@@ -266,25 +312,37 @@ public class StartMenu : MonoBehaviour
     public void SelectEasy()
     {
         dificulty = 1;
-        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[4], sfx.SfxVolume);
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.EASY;
         timer = TimeUntilNextHint;
+
+        if (!helpMode)
+        {
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[4], sfx.SfxVolume);
+        }
     }
 
     public void SelectMedium()
     {
         dificulty = 2;
-        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[5], sfx.SfxVolume);
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.MEDIUM;
         timer = TimeUntilNextHint;
+
+        if (!helpMode)
+        {
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[5], sfx.SfxVolume);
+        }
     }
 
     public void SelectHard()
     {
-        dificulty = 3;
-        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[6], sfx.SfxVolume);
+        dificulty = 3; 
         joinedPlayers.myDyfficulty = JoinedPlayers.Difficulty.HARD;
         timer = TimeUntilNextHint;
+
+        if (!helpMode)
+        {
+            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[6], sfx.SfxVolume);
+        }
     }
 
     public void Info()
@@ -296,10 +354,68 @@ public class StartMenu : MonoBehaviour
 
     public void Help()
     {
-        sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[9], sfx.SfxVolume);
+        explained.SetActive(true);
+        helpMode = true;
+        SelectTwoPlayers();
+        SelectPip();
+        SelectMedium();
+
+        sfx.sfxPlayer.clip = sfx.menuVoiceClip[9];
+        sfx.sfxPlayer.Play();
         timer = sfx.menuVoiceClip[9].length + TimeUntilNextHint;
+
+        StartCoroutine(TimeLine());
+       
     }
 
+    public void CloseHelp()
+    {
+        explained.SetActive(false);
+        StopAllCoroutines();
+        sfx.sfxPlayer.Stop();
+        sfx.sfxPlayer.clip = null;
+        SelectOnePlayer();
+        SelectPip();
+        SelectEasy();
+        helpMode = false;
+        helpTime = 0;
+        
+    }
+
+    IEnumerator TimeLine()
+    {
+        yield return new WaitForSeconds(3.1f);
+        SelectOnePlayer();
+
+        yield return new WaitForSeconds(3.25f);
+        SelectTwoPlayers();
+
+        yield return new WaitForSeconds(2f);
+        SelectOnePlayer();
+
+        yield return new WaitForSeconds(1.5f);
+        SelectMayor();
+
+        yield return new WaitForSeconds(1.8f);
+        SelectPip();
+
+        yield return new WaitForSeconds(2.5f);
+        SelectTwoPlayers();
+
+        yield return new WaitForSeconds(10f);
+        SelectEasy();
+
+        yield return new WaitForSeconds(0.5f);
+        SelectMedium();
+
+        yield return new WaitForSeconds(0.9f);
+        SelectHard();
+
+
+
+
+
+    }
     
 }
 

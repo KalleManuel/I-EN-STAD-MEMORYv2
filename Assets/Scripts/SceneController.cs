@@ -21,6 +21,7 @@ public class SceneController : MonoBehaviour
     {
         StartCoroutine(WaitforSeconds(1f));
         sfx.scene = 2;
+        sfx.sfxPlayer.Stop();
        
     }
 

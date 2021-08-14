@@ -135,9 +135,11 @@ public class VoiceAndSFX : MonoBehaviour
     {
         yield return new WaitForSeconds(1);
 
-        //VoicePlayer.clip = welcome;
-        sfxPlayer.PlayOneShot(startClips[0], SfxVolume);
-        randomWait = Random.Range(5f, 10f);
+  
+        sfxPlayer.clip = startClips[0];
+        sfxPlayer.Play();
+
+         randomWait = Random.Range(5f, 10f);
         waitBetween = startClips[0].length + randomWait;
         next = true;
         StartCoroutine(WaitClipLenght());
@@ -147,7 +149,8 @@ public class VoiceAndSFX : MonoBehaviour
 
     public void PlaySecond()
     {
-        //VoicePlayer.clip = wannaPlay;
+        sfxPlayer.clip = null;
+
         sfxPlayer.PlayOneShot(startClips[1],SfxVolume);
         randomWait = Random.Range(5f, 10f);
         waitBetween = startClips[1].length + randomWait;
