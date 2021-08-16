@@ -11,9 +11,12 @@ public class JoinedPlayers : MonoBehaviour
 
     public enum Difficulty { EASY, MEDIUM, HARD };
 
+    public enum Deck { PICTURES,ALPHABET}
+
     public PlayerMode myPlayerMode = PlayerMode.ONEPLAYER;
     public Helpers myHelpers = Helpers.PIP;
     public Difficulty myDyfficulty = Difficulty.EASY;
+    public Deck myDeck = Deck.PICTURES;
 
 
     void Awake()

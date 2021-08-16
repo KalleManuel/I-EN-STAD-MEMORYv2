@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class PuzzelLayout : MonoBehaviour
 {
-    public GameObject gameController;
+    public GameObject PictureGameController;
+    public GameObject AlphabetGameController;
 
     public GameObject playersChoices;
     public JoinedPlayers ChoiceOfLevel;
@@ -21,7 +22,8 @@ public class PuzzelLayout : MonoBehaviour
     void Awake()
     {
         // wait with gamecontroll
-        gameController.SetActive(false);
+        PictureGameController.SetActive(false);
+        AlphabetGameController.SetActive(false);
 
         // get components
         playersChoices = GameObject.FindGameObjectWithTag("PlayersChoice");
@@ -67,7 +69,16 @@ public class PuzzelLayout : MonoBehaviour
     // Activate Gamecontroll
     public void StartGameControll()
     {
-        gameController.SetActive(true);
+        if (ChoiceOfLevel.myDeck == JoinedPlayers.Deck.PICTURES)
+        {
+            PictureGameController.SetActive(true);
+        }
+
+       else if (ChoiceOfLevel.myDeck == JoinedPlayers.Deck.ALPHABET)
+            {
+                AlphabetGameController.SetActive(true);
+            }
+
     }
 
 }

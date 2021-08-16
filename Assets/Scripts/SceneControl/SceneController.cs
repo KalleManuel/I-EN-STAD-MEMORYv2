@@ -36,6 +36,8 @@ public class SceneController : MonoBehaviour
         music.changeMusic = true;
         sfx.scene = 2;
 
+        StopAllCoroutines();
+
         SceneManager.LoadScene(1);
         
 
@@ -63,6 +65,8 @@ public class SceneController : MonoBehaviour
         music.gameOn = true;
         music.changeMusic = true;
         sfx.scene = 3;
+
+        StopAllCoroutines();
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
