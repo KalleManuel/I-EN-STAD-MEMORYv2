@@ -41,12 +41,8 @@ public class PictureGameController : MonoBehaviour {
     // Other Scripts
 
 
-  
-   
-
     [Header("Player Turns")]
     public int whosTurn = 1;
-
 
 
     [Header("Flip cards")]
@@ -101,57 +97,27 @@ public class PictureGameController : MonoBehaviour {
         gameGuesses = gamePuzzles.Count / 2;
         firstCard = false;
         secondCard = false;
+        sfx.SetVoiceOnePlayerGame();
         openedCards = 0;
-
 
         // Play gong
 
-        sfx.sfxPlayer.PlayOneShot(sfx.SFX[5],sfx.SfxVolume);
-
-      // set correct voices
-
-        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
-        {
-
-            if (myChoice.myHelpers == JoinedPlayers.Helpers.MAYOR)
-            {
-               sfx.negative = sfx.sadMayor;
-                sfx.positive = sfx.happyMayor;
-            }
-
-            else if (myChoice.myHelpers == JoinedPlayers.Helpers.PIP)
-            {
-                sfx.positive = sfx.happyPip;
-                sfx.negative = sfx.sadPip;
-            }
-        }
+        sfx.PlayGong();
+        
     }
 
-    private void Update()
+    // Shuffles cards in pile
+
+    public void ShuffleDeck()
     {
-        // set right voice for right player
-
-        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
+        for (int i = 0; i < puzzles.Length; i++)
         {
-
-            if (whosTurn == 1)
-            {
-                sfx.negative = sfx.sadPip;
-                sfx.positive = sfx.happyPip;
-
-            }
-
-
-            else if (whosTurn == 2)
-            {
-                
-                sfx.negative = sfx.sadMayor;
-                sfx.positive = sfx.happyMayor;
-
-            }
+            int rnd = Random.Range(0, puzzles.Length);
+            tempGO = puzzles[rnd];
+            puzzles[rnd] = puzzles[i];
+            puzzles[i] = tempGO;
         }
     }
-
 
     void GetButtons()
     {
@@ -181,16 +147,29 @@ public class PictureGameController : MonoBehaviour {
         }
     }
 
-        void Addlisteners()
+    void Addlisteners()
+    {
+        foreach (Button btn in btns)
         {
-            foreach (Button btn in btns)
-            {
-                btn.onClick.AddListener(() => PickAPuzzle());
+            btn.onClick.AddListener(() => PickAPuzzle());
            
-            }
-        }
+         }
+    }
 
-        public void PickAPuzzle()
+    // shuffles cards on table
+
+    void Shuffle(List<Sprite> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            Sprite temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
+
+    public void PickAPuzzle()
         {
             string name = UnityEngine.EventSystems.EventSystem.current.currentSelectedGameObject.name;
            
@@ -283,14 +262,14 @@ public class PictureGameController : MonoBehaviour {
             btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
             btns[firstGuessIndex].interactable = false;
             firstCard = false;
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
+            sfx.CardupSFX();
         }
 
         else if (secondCard)
         {
             btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
             countGuesses++;
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
+            sfx.CardupSFX();
             hud.guesses++;
             secondCard = false;
             StartCoroutine(CheckIfThePuzzlesMatch());
@@ -312,9 +291,9 @@ public class PictureGameController : MonoBehaviour {
                 endTime.counting = false;
             }
 
-            sfx.sfxPlayer.PlayOneShot(sfx.positive[Random.Range(0, sfx.positive.Length)], sfx.SfxVolume);
+            sfx.PlayPositiveVoice();
 
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[1], sfx.SfxVolume);
+            sfx.GivePointSFX();
             hud.Givescore();
            
             
@@ -331,9 +310,9 @@ public class PictureGameController : MonoBehaviour {
         else { 
             
             yield return new WaitForSeconds(.3f);
-            
-         
-            sfx.sfxPlayer.PlayOneShot(sfx.negative[Random.Range(0, sfx.negative.Length)], sfx.SfxVolume);
+
+
+            sfx.PlayNegativeVoice();
 
             StartCoroutine(FlipCardsback());
 
@@ -363,7 +342,7 @@ public class PictureGameController : MonoBehaviour {
                 {
                 btns[firstGuessIndex].image.sprite = bgImage;
                 btns[secondGuessIndex].image.sprite = bgImage;
-                sfx.sfxPlayer.PlayOneShot(sfx.SFX[4], sfx.SfxVolume);
+                sfx.CardDownSFX();
             }
             }
         btns[firstGuessIndex].interactable = true;
@@ -379,8 +358,8 @@ public class PictureGameController : MonoBehaviour {
       
         if (countCorrectGuesses == gameGuesses) {
 
-            
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[2], sfx.SfxVolume);
+
+            sfx.PlayHarp();
 
 
             StartCoroutine(end.DisplayEnd());
@@ -388,30 +367,8 @@ public class PictureGameController : MonoBehaviour {
 
     }
 
-    // shuffles cards on table
+  
 
-  void Shuffle(List<Sprite> list)
-    {
-      for(int i = 0; i < list.Count; i++)
-      {
-           Sprite temp = list[i];
-           int randomIndex = Random.Range(i, list.Count);
-           list[i] = list[randomIndex];
-           list[randomIndex] = temp;
-       }
-  }
-
-    // Shuffles cards in pile
-
-    public void ShuffleDeck()
-    {
-        for (int i = 0; i < puzzles.Length; i++)
-        {
-            int rnd = Random.Range(0, puzzles.Length);
-            tempGO = puzzles[rnd];
-            puzzles[rnd] = puzzles[i];
-            puzzles[i] = tempGO;
-        }
-    }
+   
 
  }

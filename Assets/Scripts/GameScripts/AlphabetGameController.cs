@@ -101,56 +101,17 @@ public class AlphabetGameController : MonoBehaviour
         firstCard = false;
         secondCard = false;
         openedCards = 0;
+        sfx.SetVoiceOnePlayerGame();
 
 
         // Play gong
 
-        sfx.sfxPlayer.PlayOneShot(sfx.SFX[5], sfx.SfxVolume);
+        sfx.PlayGong();
 
-        // set correct voices
-
-        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.ONEPLAYER)
-        {
-
-            if (myChoice.myHelpers == JoinedPlayers.Helpers.MAYOR)
-            {
-                sfx.negative = sfx.sadMayor;
-                sfx.positive = sfx.happyMayor;
-            }
-
-            else if (myChoice.myHelpers == JoinedPlayers.Helpers.PIP)
-            {
-                sfx.positive = sfx.happyPip;
-                sfx.negative = sfx.sadPip;
-            }
-        }
+       
     }
 
-    private void Update()
-    {
-        // set right voice for right player
-
-        if (myChoice.myPlayerMode == JoinedPlayers.PlayerMode.TWOPLAYERS)
-        {
-
-            if (whosTurn == 1)
-            {
-                sfx.negative = sfx.sadPip;
-                sfx.positive = sfx.happyPip;
-
-            }
-
-
-            else if (whosTurn == 2)
-            {
-
-                sfx.negative = sfx.sadMayor;
-                sfx.positive = sfx.happyMayor;
-
-            }
-        }
-    }
-
+  
     // Shuffles cards in uppercase Deck to not get the same first every deal
 
     public void ShuffleDeck()
@@ -318,8 +279,8 @@ public class AlphabetGameController : MonoBehaviour
             btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
             btns[firstGuessIndex].transform.Rotate(0, 180, 0);
             btns[firstGuessIndex].interactable = false;
+            sfx.CardupSFX();
             firstCard = false;
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
         }
 
         else if (secondCard)
@@ -327,7 +288,7 @@ public class AlphabetGameController : MonoBehaviour
             btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
             btns[secondGuessIndex].transform.Rotate(0, 180, 0);
             countGuesses++;
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[3], sfx.SfxVolume);
+            sfx.CardupSFX();
             hud.guesses++;
             secondCard = false;
             StartCoroutine(CheckIfThePuzzlesMatch());
@@ -350,9 +311,9 @@ public class AlphabetGameController : MonoBehaviour
                 endTime.counting = false;
             }
 
-            sfx.sfxPlayer.PlayOneShot(sfx.positive[Random.Range(0, sfx.positive.Length)], sfx.SfxVolume);
+            sfx.PlayPositiveVoice();
 
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[1], sfx.SfxVolume);
+            sfx.GivePointSFX();
             hud.Givescore();
 
 
@@ -372,7 +333,7 @@ public class AlphabetGameController : MonoBehaviour
             yield return new WaitForSeconds(.3f);
 
 
-            sfx.sfxPlayer.PlayOneShot(sfx.negative[Random.Range(0, sfx.negative.Length)], sfx.SfxVolume);
+            sfx.PlayNegativeVoice();
 
             StartCoroutine(FlipCardsback());
 
@@ -404,7 +365,7 @@ public class AlphabetGameController : MonoBehaviour
                 btns[firstGuessIndex].transform.Rotate(0, 180, 0);
                 btns[secondGuessIndex].image.sprite = bgImage;
                 btns[secondGuessIndex].transform.Rotate(0, 180, 0);
-                sfx.sfxPlayer.PlayOneShot(sfx.SFX[4], sfx.SfxVolume);
+                sfx.CardDownSFX();
             }
         }
         btns[firstGuessIndex].interactable = true;
@@ -423,7 +384,7 @@ public class AlphabetGameController : MonoBehaviour
         {
 
 
-            sfx.sfxPlayer.PlayOneShot(sfx.SFX[2], sfx.SfxVolume);
+            sfx.PlayHarp();
 
 
             StartCoroutine(end.DisplayEnd());

@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class MusicController : MonoBehaviour
 {
+    [Header("Music")]
+    public AudioClip start;
+    public AudioClip easy; 
+    public AudioClip medium;
+    public AudioClip hard;
 
-    public AudioClip start, easy, medium, hard;
-
+    [Header("Inherited components")]
     public GameObject playersChoices;
     public JoinedPlayers choiceOfLevel;
+
+    [Header("AudioSource and bools")]
     public AudioSource musicPlayer;
+
     public bool gameOn = false;
     public bool changeMusic;
 

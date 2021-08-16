@@ -59,36 +59,36 @@ public class EndGame : MonoBehaviour
             {
                 if (endTime.timerValue < 10)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[0], sfx.SfxVolume);
+                    sfx.PlayEndTalk(0);
                 }
 
                 else if (endTime.timerValue < 20)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[1], sfx.SfxVolume);
+                    sfx.PlayEndTalk(1);
                 }
 
                 else if (endTime.timerValue < 30)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[2], sfx.SfxVolume);
+                    sfx.PlayEndTalk(2);
                 }
 
                 else if (endTime.timerValue < 60)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[3], sfx.SfxVolume);
+                    sfx.PlayEndTalk(3);
                 }
                 else if (endTime.timerValue < 90)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[4], sfx.SfxVolume);
+                    sfx.PlayEndTalk(4);
                 }
 
                 else if (endTime.timerValue < 120)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[5], sfx.SfxVolume);
+                    sfx.PlayEndTalk(5);
                 }
 
                 else if (endTime.timerValue < 300)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[6], sfx.SfxVolume);
+                    sfx.PlayEndTalk(6);
                 }
             }
 
@@ -96,36 +96,36 @@ public class EndGame : MonoBehaviour
             {
                 if (endTime.timerValue < 10)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[7], sfx.SfxVolume);
+                    sfx.PlayEndTalk(7);
                 }
 
                 else if (endTime.timerValue < 20)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[8], sfx.SfxVolume);
+                    sfx.PlayEndTalk(8);
                 }
 
                 else if (endTime.timerValue < 30)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[9], sfx.SfxVolume);
+                    sfx.PlayEndTalk(9);
                 }
 
                 else if (endTime.timerValue < 60)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[10], sfx.SfxVolume);
+                    sfx.PlayEndTalk(10);
                 }
                 else if (endTime.timerValue < 90)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[11], sfx.SfxVolume);
+                    sfx.PlayEndTalk(11);
                 }
 
                 else if (endTime.timerValue < 120)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[12], sfx.SfxVolume);
+                    sfx.PlayEndTalk(12);
                 }
 
                 else if (endTime.timerValue < 300)
                 {
-                    sfx.sfxPlayer.PlayOneShot(sfx.endTalk[13], sfx.SfxVolume);
+                    sfx.PlayEndTalk(13);
                 }
             }
         }
@@ -135,14 +135,14 @@ public class EndGame : MonoBehaviour
             if (hud.score1 > hud.score2)
             {
                 pepTalk.text = "Grattis Lag Pip!";
-                sfx.sfxPlayer.PlayOneShot(sfx.endTalk[Random.Range(14, 17)]);
+                sfx.PlayEndTalk(Random.Range(14, 17));
             }
 
 
             else if (hud.score2 > hud.score1)
             {
                 pepTalk.text = "Grattis Lag Borgmästaren!";
-                sfx.sfxPlayer.PlayOneShot(sfx.endTalk[Random.Range(18, 19)]);
+                sfx.PlayEndTalk(Random.Range(18, 19));
             }
 
 

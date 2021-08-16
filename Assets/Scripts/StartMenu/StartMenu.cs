@@ -126,7 +126,7 @@ public class StartMenu : MonoBehaviour
         }
         else
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[hint],sfx.SfxVolume);
+            sfx.PlayMenuVoice(hint);
        
             timer = TimeUntilNextHint;
 
@@ -220,7 +220,7 @@ public class StartMenu : MonoBehaviour
 
             if (!helpMode)
             {
-                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[0], sfx.SfxVolume);
+                sfx.PlayMenuVoice(0);
             }
 
         }
@@ -246,7 +246,7 @@ public class StartMenu : MonoBehaviour
 
             if (!helpMode)
             {
-                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[1], sfx.SfxVolume);
+                sfx.PlayMenuVoice(1);
             }
           
         }
@@ -269,7 +269,7 @@ public class StartMenu : MonoBehaviour
 
             if (!helpMode)
             {
-                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[3], sfx.SfxVolume);
+                sfx.PlayMenuVoice(3);
             }
         }
 
@@ -294,7 +294,7 @@ public class StartMenu : MonoBehaviour
 
             if (!helpMode)
             {
-                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[2], sfx.SfxVolume);
+                sfx.PlayMenuVoice(2);
             }
         }
 
@@ -302,7 +302,7 @@ public class StartMenu : MonoBehaviour
         {
             if (!helpMode)
             {
-                sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[10], sfx.SfxVolume);
+                sfx.PlayMenuVoice(10);
                 timer = TimeUntilNextHint;
             }
 
@@ -317,7 +317,7 @@ public class StartMenu : MonoBehaviour
 
         if (!helpMode)
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[4], sfx.SfxVolume);
+            sfx.PlayMenuVoice(4);
         }
     }
 
@@ -329,7 +329,7 @@ public class StartMenu : MonoBehaviour
 
         if (!helpMode)
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[5], sfx.SfxVolume);
+            sfx.PlayMenuVoice(5);
         }
     }
 
@@ -341,7 +341,7 @@ public class StartMenu : MonoBehaviour
 
         if (!helpMode)
         {
-            sfx.sfxPlayer.PlayOneShot(sfx.menuVoiceClip[6], sfx.SfxVolume);
+            sfx.PlayMenuVoice(6);
         }
     }
 
@@ -360,8 +360,7 @@ public class StartMenu : MonoBehaviour
         SelectPip();
         SelectMedium();
 
-        sfx.sfxPlayer.clip = sfx.menuVoiceClip[9];
-        sfx.sfxPlayer.Play();
+        sfx.PlayMenuVoice(9);
         timer = sfx.menuVoiceClip[9].length + TimeUntilNextHint;
 
         StartCoroutine(TimeLine());
@@ -410,12 +409,6 @@ public class StartMenu : MonoBehaviour
 
         yield return new WaitForSeconds(0.9f);
         SelectHard();
-
-
-
-
-
-    }
-    
+    }  
 }
 

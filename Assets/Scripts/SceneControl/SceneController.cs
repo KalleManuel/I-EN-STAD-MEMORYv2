@@ -9,11 +9,31 @@ public class SceneController : MonoBehaviour
     public GameObject settingPrefab;
     public VoiceAndSFX sfx;
 
+    public string sceneName;
+    static bool checkScene;
+
     private void Start()
     {
         GameObject vas = GameObject.FindGameObjectWithTag("SFX");
         sfx = vas.GetComponent<VoiceAndSFX>();
+
+        Scene currentScene = SceneManager.GetActiveScene();
+        sceneName = currentScene.name;
+
+        if (sceneName == "StartMenu" && checkScene)
+        {
+            sfx.getComponents = 1;
+            checkScene = false;
+        }
+
+        else if (sceneName == "Game" && checkScene)
+        {
+            sfx.getComponents = 2;
+            checkScene = false;
+        }
     }
+
+  
 
     // controll scenes
 
@@ -22,6 +42,7 @@ public class SceneController : MonoBehaviour
         StartCoroutine(WaitforSeconds(1f));
         sfx.scene = 2;
         sfx.sfxPlayer.Stop();
+        checkScene = true;
        
     }
 
@@ -37,6 +58,7 @@ public class SceneController : MonoBehaviour
         sfx.scene = 2;
 
         StopAllCoroutines();
+        sfx.sfxPlayer.Stop();
 
         SceneManager.LoadScene(1);
         
@@ -51,6 +73,7 @@ public class SceneController : MonoBehaviour
         music.gameOn = true;
         music.changeMusic = true;
         sfx.scene = 3;
+        sfx.sfxPlayer.Stop();
 
         SceneManager.LoadScene(2);
 
@@ -65,6 +88,7 @@ public class SceneController : MonoBehaviour
         music.gameOn = true;
         music.changeMusic = true;
         sfx.scene = 3;
+        sfx.sfxPlayer.Stop();
 
         StopAllCoroutines();
 
