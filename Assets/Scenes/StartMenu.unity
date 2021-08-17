@@ -3041,6 +3041,7 @@ MonoBehaviour:
   settingPrefab: {fileID: 4243742531805752660, guid: 5df562f3a01af466399eb3b4e5f4272a,
     type: 3}
   sfx: {fileID: 0}
+  sceneName: 
 --- !u!4 &984687686
 Transform:
   m_ObjectHideFlags: 0
@@ -4623,7 +4624,7 @@ GameObject:
   - component: {fileID: 1643424303}
   - component: {fileID: 1643424302}
   m_Layer: 5
-  m_Name: FORTH TEXT
+  m_Name: FIFTH TEXT
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5623,6 +5624,11 @@ MonoBehaviour:
   explained: {fileID: 584081653}
   helpMode: 0
   helpTime: 0
+  playerSection: {fileID: 826131696}
+  teamSection: {fileID: 1677788497}
+  difficultySection: {fileID: 1509212867}
+  deckSection: {fileID: 216427936}
+  playSection: {fileID: 1643424302}
 --- !u!4 &1906328913
 Transform:
   m_ObjectHideFlags: 0

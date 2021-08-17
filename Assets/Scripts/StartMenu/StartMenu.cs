@@ -59,6 +59,12 @@ public class StartMenu : MonoBehaviour
     public GameObject explained;
     public bool helpMode;
     public float helpTime;
+
+    public Text playerSection;
+    public Text teamSection;
+    public Text difficultySection;
+    public Text deckSection;
+    public Text playSection;
     
 
 
@@ -98,6 +104,13 @@ public class StartMenu : MonoBehaviour
         explained.SetActive(false);
 
         helpTime = 0;
+
+        playerSection.text = "Välj antal spelare";
+        teamSection.text = "Välj lag";
+        difficultySection.text = "Välj antal kort";
+        deckSection.text = "Välj lek";
+        playSection.text = "Spela!";
+
         
     }
 
@@ -143,7 +156,7 @@ public class StartMenu : MonoBehaviour
         if (dificulty == 1)
         { 
             arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos1, degreesPerSecond);
-            difDisplay.text = "Lätt";
+            difDisplay.text = "Få";
             
         }
 
@@ -151,14 +164,14 @@ public class StartMenu : MonoBehaviour
         else if (dificulty == 2)
         {
             arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos2, degreesPerSecond);
-            difDisplay.text = "Medel";
+            difDisplay.text = "Mellan";
             
         }
 
         else if (dificulty == 3)
         {
             arrow.transform.localRotation = Quaternion.RotateTowards(arrow.transform.rotation, pos3, degreesPerSecond);
-            difDisplay.text = "Svår";
+            difDisplay.text = "Många";
            
         }
 
