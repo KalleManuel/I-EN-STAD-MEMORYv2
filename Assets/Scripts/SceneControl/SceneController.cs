@@ -56,6 +56,7 @@ public class SceneController : MonoBehaviour
         music.gameOn = false;
         music.changeMusic = true;
         sfx.scene = 2;
+        checkScene = true;
 
         StopAllCoroutines();
         sfx.sfxPlayer.Stop();
@@ -74,6 +75,7 @@ public class SceneController : MonoBehaviour
         music.changeMusic = true;
         sfx.scene = 3;
         sfx.sfxPlayer.Stop();
+        checkScene = true;
 
         SceneManager.LoadScene(2);
 
